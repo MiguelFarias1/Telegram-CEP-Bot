@@ -31,4 +31,4 @@ Este é um projeto simples que permite consultar os detalhes de um CEP (Código 
 ## Screenshots
 ![Photo1](Telegram/Assets/exemploUso.png)
 
-![Photo2](Telegram/Assets/exemploDois.png)
+![Photo2](Telegram/Assets/exemplo.png)
