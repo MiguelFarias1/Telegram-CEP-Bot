@@ -26,5 +26,9 @@ Este é um projeto simples que permite consultar os detalhes de um CEP (Código 
 
 7. Execute o projeto `dotnet run`.
 
+8. Vá ao seu bot no telegram e digite `/buscar (CEP)`.
+
 ## Screenshots
-9. 
+![Photo1](Telegram/Assets/exemploUso.png)
+
+![Photo2](Telegram/Assets/exemploDois.png)
