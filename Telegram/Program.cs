@@ -7,7 +7,8 @@ public class Program
 {
     static Task Main(string[] args)
     {
-        var token = Environment.GetEnvironmentVariable("key");
+        var token = Environment.GetEnvironmentVariable("API_KEY");
+
         var bot = new TelegramBotClient(token);
 
         bot.ConfigureBotCommands();
