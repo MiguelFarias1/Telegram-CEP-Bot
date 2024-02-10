@@ -6,34 +6,46 @@ namespace Telegram;
 
 public class Program
 {
+    private static ILogger logger;
     static Task Main(string[] args)
     {
-        using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
-        ILogger logger = factory.CreateLogger("Program");
-
-        var token = Environment.GetEnvironmentVariable("API_KEY");
-
-        if (token is null)
+        try
         {
-            logger.LogCritical("The key is null!", token);
+            using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+            logger = factory.CreateLogger("Program");
+
+            var token = Environment.GetEnvironmentVariable("API_KEY");
+
+            if (token is null)
+            {
+                logger.LogCritical("The key is null!", token);
+
+                return Task.CompletedTask;
+            }
+
+            else
+            {
+                logger.LogInformation($"The key value: {token}");
+            }
+
+            var bot = new TelegramBotClient(token);
+
+            bot.ConfigureBotCommands();
+
+            bot.StartReceiving(UpdateHandler, PollingErrorHandler);
+
+            Console.ReadLine();
 
             return Task.CompletedTask;
         }
-
-        else
+        catch (Exception ex)
         {
-            logger.LogInformation($"The key value: {token}");
+            logger.LogCritical($"Failed to start bot {ex.Message}");
+
+            logger.LogInformation(ex.ToString());
+
+            return Task.CompletedTask;
         }
-
-        var bot = new TelegramBotClient(token);
-
-        bot.ConfigureBotCommands();
-
-        bot.StartReceiving(UpdateHandler, PollingErrorHandler);
-
-        Console.ReadLine();
-
-        return Task.CompletedTask;
     }
 
     private static Task PollingErrorHandler(ITelegramBotClient bot, Exception e, CancellationToken cancellation)
