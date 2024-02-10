@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Logging;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace Telegram;
@@ -7,7 +8,22 @@ public class Program
 {
     static Task Main(string[] args)
     {
+        using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+        ILogger logger = factory.CreateLogger("Program");
+
         var token = Environment.GetEnvironmentVariable("API_KEY");
+
+        if (token is null)
+        {
+            logger.LogCritical("The key is null!", token);
+
+            return Task.CompletedTask;
+        }
+
+        else
+        {
+            logger.LogInformation($"The key value: {token}");
+        }
 
         var bot = new TelegramBotClient(token);
 
