@@ -7,14 +7,15 @@ public class Program
 {
     static Task Main(string[] args)
     {
-        var bot = new TelegramBotClient("MY PRIVATE TOKEN");
-        
+        var token = Environment.GetEnvironmentVariable("key");
+        var bot = new TelegramBotClient(token);
+
         bot.ConfigureBotCommands();
-        
+
         bot.StartReceiving(UpdateHandler, PollingErrorHandler);
-        
+
         Console.ReadLine();
-        
+
         return Task.CompletedTask;
     }
 
@@ -37,40 +38,40 @@ public class Program
 
             if (messageText.StartsWith('/'))
             {
-                var command = messageText.Substring(1,5);
+                var command = messageText.Substring(1, 5);
 
                 switch (command)
                 {
                     case "start":
-                    {
-                        await bot.WelcomeClient(chatId);
+                        {
+                            await bot.WelcomeClient(chatId);
 
-                        break;
-                    }
+                            break;
+                        }
 
                     case "busca":
-                    {
-                        try
                         {
-                            string cep = messageText.Substring(8).Trim();
+                            try
+                            {
+                                string cep = messageText.Substring(8).Trim();
 
-                            bot.SearchCepAsync(chatId, cep);
+                                bot.SearchCepAsync(chatId, cep);
 
+                            }
+                            catch
+                            {
+                                bot.SendCepErrorMessage(chatId);
+                            }
+
+                            break;
                         }
-                        catch 
-                        {
-                            bot.SendCepErrorMessage(chatId);
-                        }
-                        
-                        break;
-                    }
 
                     case "ajuda":
-                    {
-                        await bot.SendHelpMessageAsync(chatId);
+                        {
+                            await bot.SendHelpMessageAsync(chatId);
 
-                        break;
-                    }
+                            break;
+                        }
                 }
             }
 
